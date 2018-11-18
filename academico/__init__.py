@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import json
 
-from parsers import Academico
+from .parsers import Academico
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
