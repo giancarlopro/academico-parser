@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 
 from .parsers import Academico
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+
+CORS(app)
 
 @app.route('/diario/<login>/<password>')
 def get_diario(login, password):
