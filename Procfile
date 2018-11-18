@@ -1,1 +1,1 @@
-web: academico:app
+web: gunicorn academico:app
