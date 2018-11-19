@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import re
 
 class Academico:
 
@@ -36,12 +37,30 @@ class Academico:
         data = table_row.find_elements_by_tag_name('tr')
         description = []
         keys = ['', 'info', 'peso', 'nota']
+        inforx = re.compile(r'(\d+/\d+/\d+), (\w+): ([\w\s]+)')
+        pesorx = re.compile(r'Peso ([\d+]*)')
+        notarx = re.compile(r'Nota: *([\d.+]*)')
 
         for i in range(len(data)):
             description.append({})
             dump = data[i].find_elements_by_tag_name('td')
             for j in range(1, 4):
                 description[i][keys[j]] = ' '.join(dump[j].get_attribute('innerHTML').split())
+        
+        for item in description:
+            info = inforx.match(item['info'])
+            if info:
+                item['data'] = info.group(1)
+                item['tipo'] = info.group(2)
+                item['info'] = info.group(3)
+            
+            peso = pesorx.match(item['peso'])
+            if peso:
+                item['peso'] = peso.group(1)
+            
+            nota = notarx.match(item['nota'])
+            if nota:
+                item['nota'] = nota.group(1)
         
         return description
 
