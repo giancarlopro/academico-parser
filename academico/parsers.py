@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import re
 
+
 class Academico:
 
     def __init__(self, login=None, password=None):
@@ -25,15 +26,24 @@ class Academico:
         password_field.send_keys(Keys.RETURN)
 
         self.logged = True
+    
+    def parse(self):
+        raise NotImplementedError()
 
-    def parse_diario_name(self, table_row):
+
+class DiarioParser(Academico):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _parse_diario_name(self, table_row):
         try:
             info = table_row.find_element_by_tag_name('strong')
             return info.get_attribute('innerHTML')
         except:
             pass
 
-    def parse_diario_description(self, table_row):
+    def _parse_diario_description(self, table_row):
         data = table_row.find_elements_by_tag_name('tr')
         description = []
         keys = ['', 'info', 'peso', 'nota']
@@ -64,9 +74,9 @@ class Academico:
         
         return description
 
-    def parse_diario_info(self, info_row, description_row):
+    def _parse_diario_info(self, info_row, description_row):
         resource = {}
-        name = self.parse_diario_name(info_row)
+        name = self._parse_diario_name(info_row)
         tmp = name.split('-')
         tmp = [x.strip() for x in tmp]
 
@@ -76,12 +86,12 @@ class Academico:
         resource['professor']   = tmp[3]
 
         if description_row: 
-            description = self.parse_diario_description(description_row)
+            description = self._parse_diario_description(description_row)
             resource['description'] = description
         
         return resource
 
-    def parse_diario(self):
+    def parse(self):
         if not self.logged:
             self.acad_login()
 
@@ -106,6 +116,6 @@ class Academico:
         resource = []
         for k in diario_description:
             resource.append(
-                self.parse_diario_info(k, diario_description[k])
+                self._parse_diario_info(k, diario_description[k])
             )
         return resource
