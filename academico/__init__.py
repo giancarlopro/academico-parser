@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import datetime
 import json
-import pdb
 
 from academico.parsers import DiarioParser
 from academico.database import db_session
