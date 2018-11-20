@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 
-from .parsers import Academico
+from .parsers import Academico, DiarioParser
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -11,8 +11,8 @@ CORS(app)
 
 @app.route('/diario/<login>/<password>')
 def get_diario(login, password):
-    acad = Academico(login=login, password=password)
-    res = acad.parse_diario()
+    diario = DiarioParser(login=login, password=password)
+    res = diario.parse()
     # return json.dumps(res, ensure_ascii=False)
     return jsonify(res)
 
