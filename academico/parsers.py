@@ -119,3 +119,12 @@ class DiarioParser(Academico):
                 self._parse_diario_info(k, diario_description[k])
             )
         return resource
+
+
+class BoletimParser(Academico):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def parse(self):
+        return {'boletim': False}
