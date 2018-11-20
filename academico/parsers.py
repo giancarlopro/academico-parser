@@ -5,11 +5,11 @@ import re
 
 class Academico:
 
-    def __init__(self, login=None, password=None):
+    def __init__(self, matricula=None, senha=None):
         self.driver = webdriver.Chrome()
         self.logged = False
-        self.login = login
-        self.password = password
+        self.matricula = matricula
+        self.senha = senha
     
     def __del__(self):
         self.driver.close()
@@ -18,10 +18,10 @@ class Academico:
         self.driver.get("https://academico.iff.edu.br/qacademico/index.asp?t=1001")
 
         login_field = self.driver.find_element_by_name('LOGIN')
-        login_field.send_keys(self.login)
+        login_field.send_keys(self.matricula)
 
         password_field = self.driver.find_element_by_name('SENHA')
-        password_field.send_keys(self.password)
+        password_field.send_keys(self.senha)
 
         password_field.send_keys(Keys.RETURN)
 
@@ -67,10 +67,18 @@ class DiarioParser(Academico):
             peso = pesorx.match(item['peso'])
             if peso:
                 item['peso'] = peso.group(1)
+                try:
+                    item['peso'] = int(item['peso'])
+                except:
+                    item['peso'] = 0
             
             nota = notarx.match(item['nota'])
             if nota:
                 item['nota'] = nota.group(1)
+                try:
+                    item['nota'] = int(item['nota'])
+                except:
+                    item['nota'] = 0
         
         return description
 
@@ -84,6 +92,11 @@ class DiarioParser(Academico):
         resource['turma']       = tmp[1]
         resource['materia']     = tmp[2]
         resource['professor']   = tmp[3]
+
+        try:
+            resource['cod'] = int(resource['cod'])
+        except:
+            resource['cod'] = 0
 
         if description_row: 
             description = self._parse_diario_description(description_row)
