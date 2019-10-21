@@ -22,6 +22,6 @@ rsa==4.0
 selenium==3.141.0
 six==1.11.0
 SQLAlchemy==1.2.14
-urllib3==1.24.1
+urllib3==1.24.2
 Werkzeug==0.15.3
 wrapt==1.10.11
